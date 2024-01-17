@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 import json
 
-class PostListView(ListView):
+class PostListView(LoginRequiredMixin, ListView):
 	model = Post
 	template_name = 'feed/home.html'
 	context_object_name = 'posts'

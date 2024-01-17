@@ -46,6 +46,7 @@ def users_list(request):
     }
     return render(request, "users/users_list.html", context)
 
+@login_required
 def friend_list(request):
 	p = request.user.profile
 	friends = p.friends.all()
