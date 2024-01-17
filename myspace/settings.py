@@ -12,16 +12,22 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / ".env")
 
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-SECRET_KEY = 'c1(fcdrsi0yc(#2*(6hmm1&wvfl@@=pczbp$d4mv7918_09+c5'
+DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
 
-DEBUG = True
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(" ")
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(' ')
 
-ALLOWED_HOSTS = []
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', '0').lower() in ['true', 't', '1']
+if SECURE_SSL_REDIRECT:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -74,8 +80,13 @@ WSGI_APPLICATION = 'myspace.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DBNAME'),
+        'HOST': os.environ.get('DBHOST'),
+        'PORT': os.environ.get('DBPORT'),
+        'USER': os.environ.get('DBUSER'),
+        'PASSWORD': os.environ.get('DBPASS'),
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
